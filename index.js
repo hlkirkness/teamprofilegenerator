@@ -2,8 +2,11 @@ var inquirer = require('inquirer');
 
 // import all your classes
 const Manager = require('./lib/Manager.js')
-
-
+const Engineer = require('./lib/Engineer.js')
+const Intern = require('./lib/Intern.js')
+const body = require("./src/body")
+const card = require("./src/card")
+const fs = require("fs")
 // global array for the list of employees
 const employees = [];
 
@@ -57,18 +60,18 @@ const addManager = () => {
         },
         {
             type: "input",
-            name: "name",
+            name: "email",
             message: "What is the email of the manager?",
         },
         {
             type: "input",
-            name: "id",
+            name: "officenumber",
             message: "What is the office number of the manager?",
         },
     ])
     .then((answers) => {
         // create a new manager using the Manager class
-        const newManager = new Manager(answers.name, answers.id)
+        const newManager = new Manager(answers.name, answers.id, answers.email, answers.officenumber)
 
         // push the new Manager inside of the employees array
         employees.push(newManager);
@@ -93,18 +96,18 @@ const addEngineer = () => {
         },
         {
             type: "input",
-            name: "name",
+            name: "email",
             message: "What is the email of the engineer?",
         },
         {
             type: "input",
-            name: "id",
-            message: "What is the office number of the engineer?",
+            name: "github",
+            message: "What is the github of the engineer?",
         },
     ])
     .then((answers) => {
         // create a new engineer using the engineer class
-        const newEngineer = new Engineer(answers.name, answers.id)
+        const newEngineer = new Engineer(answers.name, answers.id, answers.email, answers.github)
 
         // push the new engineer inside of the employees array
         employees.push(newEngineer);
@@ -129,17 +132,22 @@ const addIntern = () => {
         },
         {
             type: "input",
-            name: "name",
+            name: "email",
             message: "What is the email of the intern?",
+        },
+        {
+            type: "input",
+            name: "school",
+            message: "What is the school of the intern?",
         },
         
     ])
     .then((answers) => {
         // create a new engineer using the engineer class
-        const newIntern = new Intern(answers.name, answers.id)
+        const newIntern = new Intern(answers.name, answers.id, answers.email, answers.school)
 
         // push the new engineer inside of the employees array
-        employees.push(Intern);
+        employees.push(newIntern);
 
         startMenu()
 
@@ -150,14 +158,11 @@ const final = () => {
     // start rendering the HTML file using the employees array
 
     console.log(employees)
+    let cards = ""
+    for (let i = 0; i < employees.length; i++) {
+        cards = cards + card(employees[i])
+    }
+    fs.writeFileSync("./dist/index.html", body(cards))
 }
-
-
-
-
-
-
-
-
 
 startMenu();
